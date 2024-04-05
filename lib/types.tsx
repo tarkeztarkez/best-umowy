@@ -1,19 +1,21 @@
-
 export type Group = {
-  subject: string;
-  class: string;
-  length: number; // in min
-  amountInWeek: number;
-  cost: number;
-  schedule: string
-}
+	id: number;
+	class: string;
+	length: number; // in min
+	subject: string;
+	amountInWeek: number;
+	cost: number;
+	schedule: string;
+};
 
 export type Student = {
-  name: string;
-  surname: string;
-  groups: Group[];
-}
+	id: number;
+	name: string;
+	surname: string;
+	groups: Group[];
+};
 
-export type Data = {
-  students: Student[];
-}
+export type TemplateData = {
+	students: Student[];
+	discounts: number[];
+};
