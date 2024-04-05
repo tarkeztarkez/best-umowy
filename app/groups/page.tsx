@@ -12,6 +12,9 @@ function page() {
 				<Link href={"/"}>
 					<Button variant={"link"}>Wróć</Button>
 				</Link>
+				<Link href={"/groups/bundles"}>
+					<Button variant={"link"}>Ustawienia pakietów</Button>
+				</Link>
 			</Card>
 			<div className="mt-2 ml-2">
 				<GroupList />

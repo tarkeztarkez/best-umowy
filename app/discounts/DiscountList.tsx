@@ -19,7 +19,7 @@ function DiscountList() {
 		<div>
 			<div className="mb-2 flex gap-2 items-center">
 				<h1 className="text-2xl">Zniżki</h1>
-				<Button onClick={() => newDiscount()}>Dodaj grupę</Button>
+				<Button onClick={() => newDiscount()}>Dodaj zniżke</Button>
 			</div>
 			<div className="flex gap-2">
 				{discounts.map((discount, index) => (

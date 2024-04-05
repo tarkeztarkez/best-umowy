@@ -6,6 +6,9 @@ import { TemplateData, Group } from "./types";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 
+import mammoth from "mammoth";
+import html_to_pdf from "html-pdf-node";
+
 export async function fillTemplate(data: TemplateData) {
 	let totalCost = 0;
 
@@ -40,7 +43,7 @@ export async function fillTemplate(data: TemplateData) {
 					class: g.class,
 				})),
 				amountInWeek: s.groups.map((g) => g.amountInWeek * 30),
-				cost: s.groups.map((g) => g.cost),
+				cost: s.groups.map((g) => (g.cost == 0 ? "" : `${g.cost}zł`)),
 			};
 		}),
 		schedules: allGroups.map((g) => ({
@@ -71,4 +74,28 @@ export async function fillTemplate(data: TemplateData) {
 		.join(", ");
 
 	return { file: buf, filename: filename };
+}
+
+export async function fillTemplateToHTML(data: TemplateData) {
+	let { file: doc, filename } = await fillTemplate(data);
+
+	// doc base64 to file
+	const buf = Buffer.from(doc, "base64");
+	const html = await mammoth.convertToHtml({
+		buffer: buf,
+	});
+
+	// convert pdf.create.tofile to promise
+	// to base64
+
+	return html.value;
+}
+
+export async function fillTemplateToPDF(data: TemplateData) {
+	let html = await fillTemplateToHTML(data);
+
+	return await html_to_pdf
+		.generatePdf({ content: html }, { format: "A4" })
+		// @ts-ignore
+		.then((e) => e.toString("base64"));
 }

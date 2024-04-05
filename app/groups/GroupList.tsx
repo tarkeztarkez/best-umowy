@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useDataStore, useGroupsbySubject } from "@/lib/state";
-import { Group } from "@/lib/types";
+import { Group as GroupType } from "@/lib/types";
 import React from "react";
 
 function GroupList() {
@@ -52,7 +52,11 @@ function Group({
 	group,
 	nextGroup,
 	prevGroup,
-}: { group: Group; nextGroup: Group | null; prevGroup: Group | null }) {
+}: {
+	group: GroupType;
+	nextGroup: GroupType | null;
+	prevGroup: GroupType | null;
+}) {
 	const deleteGroup = useDataStore((state) => state.deleteGroup);
 	const switchGroups = useDataStore((state) => state.switchGroups);
 
@@ -101,7 +105,12 @@ function GroupInput({
 	field,
 	textarea,
 	label,
-}: { group: Group; field: keyof Group; textarea?: boolean; label: string }) {
+}: {
+	group: GroupType;
+	field: keyof GroupType;
+	textarea?: boolean;
+	label: string;
+}) {
 	const updateGroup = useDataStore((state) => state.updateGroup);
 
 	const [value, setValue] = React.useState(group[field]);

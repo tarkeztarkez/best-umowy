@@ -2,13 +2,21 @@ import { create } from "zustand";
 import { Group, Student as TemplateStudent } from "./types";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { v4 as uuidv4 } from "uuid";
 
 export interface Student extends Omit<TemplateStudent, "groups"> {
 	groups: {
 		id: number;
 		discount: number;
 	}[];
+
+	bundle?: number;
+}
+
+export interface Bundle {
+	id: number;
+	name: string;
+	cost: number;
+	groups: number[];
 }
 
 export interface DataStore {
@@ -27,10 +35,15 @@ export interface DataStore {
 	newDiscount: () => void;
 	deleteDiscount: (index: number) => void;
 
+	setBundle: (id: number, bundle: Partial<Bundle>) => void;
+	newBundle: () => void;
+	deleteBundle: (id: number) => void;
+
 	students: Student[];
 	groups: Group[];
 
 	discounts: number[];
+	bundles: Bundle[];
 }
 
 export const useDataStore = create<DataStore>()(
@@ -85,6 +98,32 @@ export const useDataStore = create<DataStore>()(
 					const index = state.students.findIndex((e: Student) => e.id === id);
 					state.students[index] = { ...state.students[index], ...student };
 				});
+
+				if (student.groups) {
+					const student = get().students.find((e) => e.id === id)!;
+					const bundles = get().bundles;
+					// check if student has all groups from bundle
+					const bundle = bundles.find((bundle) =>
+						bundle.groups.every((group) =>
+							student.groups.some((studentGroup) => studentGroup.id === group),
+						),
+					);
+
+					if (bundle) {
+						set((state: DataStore) => {
+							state.students.find((e) => e.id === id)!.bundle = bundle.id;
+							// clear all discounts
+							state.students.find((e) => e.id === id)!.groups = state.students
+								.find((e) => e.id === id)!
+								.groups.map((g) => ({ id: g.id, discount: 0 }));
+						});
+					} else {
+						set((state: DataStore) => {
+							state.students.find((e) => e.id === id)!.bundle = undefined;
+						});
+					}
+					return;
+				}
 			},
 			newStudent: () => {
 				set((state: DataStore) => {
@@ -124,6 +163,29 @@ export const useDataStore = create<DataStore>()(
 				});
 			},
 
+			setBundle(id: number, bundle: Partial<Bundle>) {
+				set((state: DataStore) => {
+					const index = state.bundles.findIndex((e: Bundle) => e.id === id);
+					state.bundles[index] = { ...state.bundles[index], ...bundle };
+				});
+			},
+			newBundle() {
+				set((state: DataStore) => {
+					state.bundles.push({
+						id: Date.now(),
+						name: "",
+						cost: 0,
+						groups: [],
+					});
+				});
+			},
+			deleteBundle(id: number) {
+				set((state: DataStore) => {
+					const index = state.bundles.findIndex((e: Bundle) => e.id === id);
+					state.bundles.splice(index, 1);
+				});
+			},
+
 			groups: [
 				{
 					id: 3,
@@ -146,6 +208,7 @@ export const useDataStore = create<DataStore>()(
 			],
 
 			discounts: [0, 10, 20],
+			bundles: [],
 		})),
 		{
 			name: "data-storage", // name of the item in the storage (must be unique)

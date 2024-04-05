@@ -48,6 +48,7 @@ function Student({ student }: { student: Student }) {
 				<NameInput student={student} />
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2">
+				<BundleDisplay student={student} />
 				<GroupSelect student={student} />
 			</CardContent>
 			<CardFooter>
@@ -69,16 +70,33 @@ function NameInput({ student }: { student: Student }) {
 			<Label htmlFor="name">Imię i nazwisko</Label>
 			<Input
 				id="name"
-				value={value}
+				value={value.trimStart()}
 				onChange={(e) => {
-					setValue(e.target.value);
+					setValue(e.target.value.trimStart());
 				}}
 				onBlur={(e) => {
-					const [name, surname] = value.split(" ");
+					const [name, surname] = e.target.value.split(" ");
 					updateStudent(student.id, { name, surname });
 				}}
 			/>
 		</div>
+	);
+}
+
+function BundleDisplay({ student }: { student: Student }) {
+	const groups = useDataStore((state) => state.groups);
+	const bundles = useDataStore((state) => state.bundles);
+
+	const bundle = bundles.find((bundle) =>
+		bundle.groups.every((group) =>
+			student.groups.some((studentGroup) => studentGroup.id === group),
+		),
+	);
+
+	return (
+		<h1 className="font-bold text-xl text-red-500">
+			{bundle && <p>{bundle.name}</p>}
+		</h1>
 	);
 }
 
@@ -129,7 +147,7 @@ function GroupSelect({ student }: { student: Student }) {
 	return (
 		<div className="flex flex-col gap-2">
 			{groupsBySubject.map((subject) => (
-				<div>
+				<div key={subject.name}>
 					<h1 className="font-bold">{subject.name}</h1>
 					<div className="flex gap-2">
 						<div>
@@ -161,7 +179,9 @@ function GroupSelect({ student }: { student: Student }) {
 								))}
 							</RadioGroup>
 						</div>
-						<DiscountSelect student={student} subject={subject.name} />
+						{!student.bundle && (
+							<DiscountSelect student={student} subject={subject.name} />
+						)}
 					</div>
 				</div>
 			))}
@@ -218,7 +238,7 @@ function DiscountSelect({
 					<Label htmlFor={"0" + subject + student.id}>Brak</Label>
 				</div>
 				{discounts.map((discount) => (
-					<div className="flex items-center gap-1">
+					<div className="flex items-center gap-1" key={discount}>
 						<RadioGroupItem
 							id={`${discount}`}
 							checked={currentGroup.discount == discount}
