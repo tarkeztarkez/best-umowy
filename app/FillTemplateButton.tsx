@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { DataStore, useDataStore } from "@/lib/state";
 import {
 	fillTemplate,
-	fillTemplateToHTML,
-	fillTemplateToPDF,
+	// fillTemplateToHTML,
+	// fillTemplateToPDF,
 } from "@/lib/templating";
 import { TemplateData } from "@/lib/types";
 

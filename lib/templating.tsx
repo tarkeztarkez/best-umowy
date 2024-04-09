@@ -7,8 +7,8 @@ import { TemplateData, Group } from "./types";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 
-import mammoth from "mammoth";
-import html_to_pdf from "html-pdf-node";
+// import mammoth from "mammoth";
+// import html_to_pdf from "html-pdf-node";
 
 export async function fillTemplate(data: TemplateData) {
 	let totalCost = 0;
@@ -82,26 +82,26 @@ export async function fillTemplate(data: TemplateData) {
 	return { file: buf, filename: filename };
 }
 
-export async function fillTemplateToHTML(data: TemplateData) {
-	let { file: doc, filename } = await fillTemplate(data);
+// export async function fillTemplateToHTML(data: TemplateData) {
+// 	let { file: doc, filename } = await fillTemplate(data);
 
-	// doc base64 to file
-	const buf = Buffer.from(doc, "base64");
-	const html = await mammoth.convertToHtml({
-		buffer: buf,
-	});
+// 	// doc base64 to file
+// 	const buf = Buffer.from(doc, "base64");
+// 	const html = await mammoth.convertToHtml({
+// 		buffer: buf,
+// 	});
 
-	// convert pdf.create.tofile to promise
-	// to base64
+// 	// convert pdf.create.tofile to promise
+// 	// to base64
 
-	return html.value;
-}
+// 	return html.value;
+// }
 
-export async function fillTemplateToPDF(data: TemplateData) {
-	let html = await fillTemplateToHTML(data);
+// export async function fillTemplateToPDF(data: TemplateData) {
+// 	let html = await fillTemplateToHTML(data);
 
-	return await html_to_pdf
-		.generatePdf({ content: html }, { format: "A4" })
-		// @ts-ignore
-		.then((e) => e.toString("base64"));
-}
+// 	return await html_to_pdf
+// 		.generatePdf({ content: html }, { format: "A4" })
+// 		// @ts-ignore
+// 		.then((e) => e.toString("base64"));
+// }
