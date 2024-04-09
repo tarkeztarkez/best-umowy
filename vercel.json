@@ -1,6 +1,6 @@
 {
   "functions": {
-    "public/umowa.docx": {
+    "lib/templating": {
       "includeFiles": "public/umowa.docx"
     }
   }
