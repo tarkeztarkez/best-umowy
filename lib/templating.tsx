@@ -55,8 +55,13 @@ export async function fillTemplate(data: TemplateData) {
 	};
 
 	console.log(preparedData);
+	let content: Buffer;
 
-	const content = readFileSync(path.join(process.cwd(), "umowa.docx"));
+	if (process.env.NODE_ENV == "production") {
+		content = readFileSync(path.join(process.cwd(), "/umowa.docx"));
+	} else {
+		content = readFileSync(path.join(process.cwd(), "/public/umowa.docx"));
+	}
 	const zip = new PizZip(content);
 	const doc = new Docxtemplater(zip, {
 		linebreaks: true,
