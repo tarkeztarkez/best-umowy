@@ -8,9 +8,14 @@ import {
 	// fillTemplateToPDF,
 } from "@/lib/templating";
 import { TemplateData } from "@/lib/types";
-
-import printJS from "print-js";
 import { useState } from "react";
+
+let PizZipUtils = null;
+if (typeof window !== "undefined") {
+	import("pizzip/utils/index.js").then(function (r) {
+		PizZipUtils = r;
+	});
+}
 
 function base64ToUnit8Array(input: string) {
 	const byteCharacters = atob(input);

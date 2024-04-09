@@ -6,6 +6,7 @@ import { TemplateData, Group } from "./types";
 
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import axios from "axios";
 
 // import mammoth from "mammoth";
 // import html_to_pdf from "html-pdf-node";
@@ -60,7 +61,13 @@ export async function fillTemplate(data: TemplateData) {
 	if (process.env.NODE_ENV == "production") {
 		content = readFileSync(path.join(process.cwd(), "/umowa.docx"));
 	} else {
-		content = readFileSync(path.join(process.cwd(), "/public/umowa.docx"));
+		const response = await axios.get(
+			"https://best-umowy.vercel.app/umowa.docx",
+			{
+				responseType: "arraybuffer",
+			},
+		);
+		content = Buffer.from(response.data, "utf-8");
 	}
 	const zip = new PizZip(content);
 	const doc = new Docxtemplater(zip, {

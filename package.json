@@ -18,6 +18,7 @@
     "@types/html-pdf": "^3.0.3",
     "@types/html-pdf-node": "^1.0.2",
     "@types/uuid": "^9.0.8",
+    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "docxtemplater": "^3.46.2",
