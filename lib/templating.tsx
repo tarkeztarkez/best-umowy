@@ -1,6 +1,7 @@
 "use server";
 
 import { readFileSync } from "fs";
+import path from "path";
 import { TemplateData, Group } from "./types";
 
 import PizZip from "pizzip";
@@ -55,7 +56,7 @@ export async function fillTemplate(data: TemplateData) {
 
 	console.log(preparedData);
 
-	const content = readFileSync(process.cwd() + "/public/umowa.docx");
+	const content = readFileSync(path.join(process.cwd(), "umowa.docx"));
 	const zip = new PizZip(content);
 	const doc = new Docxtemplater(zip, {
 		linebreaks: true,
