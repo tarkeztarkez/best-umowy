@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "public/umowa.docx": {
+      "includeFiles": "public/umowa.docx"
+    }
+  }
+}
