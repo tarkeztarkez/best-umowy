@@ -59,14 +59,17 @@ export async function fillTemplate(data: TemplateData) {
 	let content: Buffer;
 
 	if (process.env.NODE_ENV == "production") {
-		content = readFileSync(path.join(process.cwd(), "/umowa.docx"));
-	} else {
 		const response = await axios.get(
 			"https://best-umowy.vercel.app/umowa.docx",
 			{
 				responseType: "arraybuffer",
 			},
 		);
+		content = Buffer.from(response.data, "utf-8");
+	} else {
+		const response = await axios.get("https://localhost:3000/umowa.docx", {
+			responseType: "arraybuffer",
+		});
 		content = Buffer.from(response.data, "utf-8");
 	}
 	const zip = new PizZip(content);
