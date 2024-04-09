@@ -8,6 +8,7 @@ import {
 	// fillTemplateToPDF,
 } from "@/lib/templating";
 import { TemplateData } from "@/lib/types";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 let PizZipUtils = null;
@@ -70,7 +71,7 @@ function prepareData(data: DataStore) {
 }
 
 export default function FillTemplateButton() {
-	const [html, setHtml] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
 
 	function download(reportName: string, byte: Uint8Array) {
 		var blob = new Blob([byte], {
@@ -81,19 +82,22 @@ export default function FillTemplateButton() {
 		var fileName = reportName;
 		link.download = fileName;
 		link.click();
+		setLoading(false);
 	}
 
 	return (
 		<div className="flex items-center gap-2">
 			<Button
-				className="w-fit"
-				onClick={() =>
+				className="w-40"
+				onClick={() => {
+					setLoading(true);
 					fillTemplate(prepareData(useDataStore.getState())).then((e) =>
 						download(e.filename, base64ToUnit8Array(e.file)),
-					)
-				}
+					);
+				}}
+				disabled={loading}
 			>
-				Wygeneruj umowę
+				{loading ? <Loader2 className="animate-spin" /> : "Wygeneruj umowę"}
 			</Button>
 			{/* <Button
 				variant={"outline"}

@@ -67,7 +67,7 @@ export async function fillTemplate(data: TemplateData) {
 		);
 		content = Buffer.from(response.data, "utf-8");
 	} else {
-		const response = await axios.get("https://localhost:3000/umowa.docx", {
+		const response = await axios.get("http://localhost:3000/umowa.docx", {
 			responseType: "arraybuffer",
 		});
 		content = Buffer.from(response.data, "utf-8");
