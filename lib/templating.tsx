@@ -32,6 +32,7 @@ export async function fillTemplate(data: TemplateData) {
 	);
 
 	const preparedData = {
+		date: data.date,
 		totalCost: totalCost,
 		students: data.students.map((s, sIndex) => {
 			return {

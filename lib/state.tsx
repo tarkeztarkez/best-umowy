@@ -20,6 +20,9 @@ export interface Bundle {
 }
 
 export interface DataStore {
+	date: string;
+	setDate: (date: string) => void;
+
 	setGroups: (groups: Group[]) => void;
 	updateGroup: (id: number, group: Partial<Group>) => void;
 	newGroup: () => void;
@@ -49,6 +52,14 @@ export interface DataStore {
 export const useDataStore = create<DataStore>()(
 	persist(
 		immer((set, get) => ({
+			// date formatet as DD.MM.YYYY
+			date: new Date().toLocaleDateString("pl-PL"),
+			setDate: (date: string) => {
+				set((state: DataStore) => {
+					state.date = date;
+				});
+			},
+
 			setGroups: (groups: Group[]) => {
 				set((state: DataStore) => {
 					state.groups = groups;

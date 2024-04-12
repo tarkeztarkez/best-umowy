@@ -16,6 +16,7 @@ export type Student = {
 };
 
 export type TemplateData = {
+	date: string;
 	students: Student[];
 	discounts: number[];
 };

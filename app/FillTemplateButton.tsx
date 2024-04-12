@@ -67,6 +67,7 @@ function prepareData(data: DataStore) {
 			}
 		}),
 		discounts: data.discounts,
+		date: data.date,
 	} satisfies TemplateData;
 }
 

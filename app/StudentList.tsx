@@ -20,7 +20,8 @@ function StudentList() {
 	const clearStudents = useDataStore((state) => state.clearStudents);
 
 	return (
-		<div>
+		<div className="flex flex-col gap-2">
+			<DateInput />
 			<div className="mb-2 flex gap-2 items-center">
 				<h1 className="text-2xl">Uczniowie</h1>
 				<Button onClick={() => newStudent()}>Dodaj ucznia</Button>
@@ -38,6 +39,25 @@ function StudentList() {
 }
 
 export default StudentList;
+
+function DateInput() {
+	const setDate = useDataStore((state) => state.setDate);
+	const date = useDataStore((state) => state.date);
+
+	return (
+		<div className="flex gap-2 items-center">
+			<Label htmlFor="date">Data</Label>
+			<Input
+				id="date"
+				value={date}
+				className="w-32"
+				onChange={(e) => {
+					setDate(e.target.value);
+				}}
+			/>
+		</div>
+	);
+}
 
 function Student({ student }: { student: Student }) {
 	const deleteStudent = useDataStore((state) => state.deleteStudent);
