@@ -114,21 +114,37 @@ export const useDataStore = create<DataStore>()(
 
         updateStudent: (id: number, student: Partial<Student>) => {
           set((state: DataStore) => {
-            const index = state.students.findIndex((e: Student) => e.id === id);
+            const index = state.students.findIndex((e) => e.id === id);
             state.students[index] = { ...state.students[index], ...student };
           });
 
           if (student.groups) {
             const st = get().students.find((e) => e.id === id)!;
             const bundles = get().bundles;
-            const bundle = bundles.find((b) =>
-              b.groups.every((gid) => st.groups.some((sg) => sg.id === gid)),
-            );
+            const allGroups = get().groups;
 
-            if (bundle) {
+            const matchingBundle = bundles.find((b) => {
+              const bundleGroups = allGroups.filter((g) =>
+                b.groups.includes(g.id),
+              );
+              const subjects = Array.from(
+                new Set(bundleGroups.map((g) => g.subject)),
+              );
+
+              return subjects.every((subject) => {
+                const groupIdsForSubject = bundleGroups
+                  .filter((g) => g.subject === subject)
+                  .map((g) => g.id);
+                return st.groups.some((sg) =>
+                  groupIdsForSubject.includes(sg.id),
+                );
+              });
+            });
+
+            if (matchingBundle) {
               set((state: DataStore) => {
                 const target = state.students.find((e) => e.id === id)!;
-                target.bundle = bundle.id;
+                target.bundle = matchingBundle.id;
                 target.groups = target.groups.map((g) => ({
                   id: g.id,
                   discount: 0,
